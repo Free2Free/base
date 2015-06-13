@@ -1,1 +1,351 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <conio.h>
+#include <time.h>
+#define N 100
 
+typedef struct list
+{
+	int data[N];
+	int length;
+}SList;
+
+//************初始化数序表************
+void Init_List(SList *p)
+{
+	int i;
+	for(i = 0; i <= p->length; i++)
+	{
+		p->data[i] = 0;
+	}
+}
+
+//**************录入数据函数***************
+void Input(SList *p, int n)
+{
+	int i;
+	srand(time(NULL));
+	for(i = 1; i <= n; i++)
+	{
+		p->data[i] = rand()%100 +1;			
+	}
+	p->length = n;
+	printf("\n提示:%d个数据计算机自动生成:\n", n);
+}
+
+//************主菜单函数************
+void Main_Menu()
+{
+	printf("\n************排序函数************\n");
+	printf("1.录入数据\n");
+	printf("2.直接插入排序\n");
+	printf("3.折半插入排序\n");
+	printf("4.希尔排序\n");
+	printf("5.起泡排序\n");
+	printf("6.快速排序\n");
+	printf("7.选择排序\n");
+	printf("8.堆排序\n");
+	printf("0.退出系统\n");
+}
+
+//**************打印函数***************
+void Print(SList *p)
+{
+	int i;
+	for(i = 1; i <= p->length; i++)
+	{
+		printf("%-4d", p->data[i]);			
+	}
+	printf("\n");
+}
+
+//**************直接插入排序*************
+void InsertSort(SList *p)
+{
+	int i, j;
+	for(i = 2; i <= p->length; i++)
+	{
+		p->data[0] = p->data[i];		// 暂存关键吗, 设置哨兵
+		for(j = i-1; p->data[0] < p->data[j]; j--)		// 寻找插入位置
+		{
+			p->data[j+1] = p->data[j];		// 纪录后移
+		}
+		p->data[j+1] = p->data[0];
+		Print(p);
+	}
+}
+
+//**************折半插入排序*************
+void BinarySort(SList *p)
+{
+	int i, j;
+	int low , high, mid, flag;
+	for(i = 2; i <= p->length; i++)
+	{
+		p->data[0] = p->data[i];		
+		low = 1; 
+		high = i-1; 
+		flag = 1;		// 有序区是 1~i-1
+		while(low <= high && flag != 0)
+		{
+			mid = low + (high - low)/2;
+			if(p->data[0] < p->data[mid])
+			{
+				high = mid-1;
+			}
+			else if(p->data[0] > p->data[mid])
+			{
+				low = mid+1;
+			}
+			else
+			{
+				flag = 0;			// 找到插入位置mid
+			}	
+		}
+		if(flag == 0)
+		{
+			for(j = i-1; j > mid; j--)			// 将mid之后所有数据移位	
+			{
+				p->data[j+1] = p->data[j];	
+			}
+			p->data[mid+1] = p->data[0];
+			Print(p);
+		}
+		if(low > high)
+		{
+			for(j = i-1; j >= mid; j--)	
+			{
+				p->data[j+1] = p->data[j];	
+			}
+			p->data[high+1] = p->data[0];
+			Print(p);
+		}
+	}
+}
+
+//*************希尔排序**********
+void ShellSort(SList *p)
+{
+	int i, j, d;
+	for(d = p->length/2; d >= 1; d=d/2)
+	{
+		for(i=d+1; i < p->length; i++)
+		{
+			p->data[0] = p->data[i];
+			for(j = i-d; j>0 && p->data[0]<p->data[j]; j=j-d)
+			{
+				p->data[j+d] = p->data[j];			// 记录后移d个位置
+			}
+			p->data[j+d] = p->data[0];
+		}
+		Print(p);
+	}
+}
+
+void Swap(int *a, int *b)
+{
+	int temp;
+	temp = *a;
+	*a = *b;
+	*b = temp;
+}
+
+//*************起泡排序************
+void BublleSort(SList *p)
+{
+	int exchange, bound, j;
+	exchange = p->length-1;
+	while(exchange != 0)
+	{
+		bound = exchange; exchange = 0;
+		for(j = 1; j < bound; j++)
+		{
+			if(p->data[j] > p->data[j+1])
+			{
+				Swap(&p->data[j], &p->data[j+1]);
+			}
+			exchange = j;
+			Print(p);
+		}
+	}
+}
+
+// **************快速排序一次划分****************
+int Partion(int *r, int first, int end)
+{
+	int i = first, j = end;
+	while(i < j)
+	{
+		while(i < j && r[i] <= r[j])
+		{
+			j--;					// 从右往左寻找比下标i小的值
+		}
+		if(i < j)
+		{
+			Swap(&r[i], &r[j]);
+			i++;
+		}
+		while(i < j && r[i] <= r[j])
+		{
+			i++;					// 从左往右寻找比下标i小的值
+		}
+		if(i < j)
+		{
+			Swap(&r[j], &r[i]);
+			j--;
+		}
+	}
+	return i;			// 下标i j 重合时, 即为轴值的位置
+}
+
+void QuickSort(int *r, int first, int end)
+{
+	int pivot;			// 存储轴值
+	if(first >= end)
+	{
+		return;
+	}
+	else
+	{
+		pivot = Partion(r, first, end);
+		QuickSort(r, first, pivot-1);
+		QuickSort(r, pivot+1, end);
+	}
+}
+
+//************选择排序************
+void SelectSort(SList *r)
+{
+	int i, j, index;
+	for(i = 0; i < r->length; i++)
+	{
+		index = i;
+		for(j=i+1; j <= r->length; j++)
+		{
+			if(r->data[j] < r->data[index])
+			{
+				index = j;
+			}
+		}
+		if(index != i)
+		{
+			Swap(&r->data[i], &r->data[index]);
+		}
+		Print(r);
+	}
+}
+
+void Sift(int *r, int k, int m)
+{
+	int i, j;
+	i = k;
+	j = 2*i;				// i的左孩子
+	while(j <= m)			// 此处必须要用循环
+	{
+		if(j < m && r[j] < r[j+1])			// 说明i的右孩子存在
+		{
+			j++;
+		}
+		if(r[i] > r[j])
+		{
+			break;
+		}
+		else
+		{
+			Swap(&r[i], &r[j]);
+			i = j;					// i标记被筛选的结点
+			j = 2*i;				// 循环加此条件保证结点i的孩子都比它小
+		}
+	}
+}
+
+
+
+//**************堆排序***************
+void HeapSort(SList *r)
+{
+	int i;
+	for(i=r->length/2; i >= 1; i--)
+	{
+		Sift(r->data, i, r->length);		// 建堆-----大根堆
+	}
+	for(i = 1; i < r->length; i++)
+	{
+		Swap(&r->data[1], &r->data[r->length-i+1]);		// 将最大值与最小值交换位置
+		Sift(r->data, 1, r->length-i);
+	}
+	Print(r);
+}
+
+
+
+void main()
+{
+	int choose, n;
+	SList L;
+	do
+	{
+		Main_Menu();		// 调用主菜单函数
+		printf("\n请选择功能号:");
+		scanf("%d", &choose);
+		switch(choose)
+		{
+		case 1:
+			{
+				Init_List(&L);
+				printf("\n请输入数据个数:");
+				scanf("%d", &n);
+				Input(&L, n);
+				Print(&L);
+				break;
+			}
+		case 2:
+			{
+				InsertSort(&L);
+				Print(&L);
+				break;
+			}
+		case 3:
+			{
+				BinarySort(&L);
+				Print(&L);
+				break;
+			}
+		case 4:
+			{
+				ShellSort(&L);
+				Print(&L);
+				break;
+			}
+		case 5:
+			{
+				BublleSort(&L);
+				Print(&L);
+				break;
+			}
+		case 6:
+			{
+				QuickSort(L.data, 1, L.length);
+				Print(&L);
+				break;
+			}
+		case 7:
+			{
+				SelectSort(&L);
+				Print(&L);
+				break;
+			}
+		case 8:
+			{
+				HeapSort(&L);
+				break;
+			}
+		case 0:
+			{
+				exit(0);			// 正常退出程序
+			}
+		}
+		getch();
+		system("cls");
+	}while(choose != 0);
+}
