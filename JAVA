@@ -1,0 +1,337 @@
+//Test.java
+public class Test
+{
+	public static void main(String [] args)
+	{
+		int n = 10;
+		int data[] = new int[1000];
+		Create create = new Create(n, data);
+		create.Input();
+		Sort sort = new Sort(n, data);
+		sort.InsertSort();
+		create.Print();
+		sort.BinarySort();
+		create.Print();
+		sort.ShellSort();
+		create.Print();
+		sort.BublleSort();
+		create.Print();
+		sort.SelectSort();
+		create.Print();
+		sort.QuickSort(data, 1, n);
+		System.out.println();
+		create.Print();
+		sort.HeapSort();
+		create.Print();
+	}		
+}
+
+//Sort.java
+public class Sort
+{
+	int n;
+	int data[];
+	Sort(){}
+	Sort(int n, int data[])
+	{
+		this.n = n;
+		this.data = data;
+	}
+	//**************直接插入排序*************
+	void InsertSort()
+	{
+		int j;
+		for(int i = 2; i <= n; i++)
+		{
+			data[0] = data[i];								// 暂存关键吗, 设置哨兵
+			for(j = i-1; data[0] > data[j]; j--)			// 寻找插入位置
+			{
+				data[j+1] = data[j];						// 纪录后移
+			}
+			data[j+1] = data[0];
+		}
+		System.out.println();
+	}
+
+	//**************折半插入排序*************
+	void BinarySort()
+	{
+		int i, j;
+		int low , high, mid = 0, flag;
+		for(i = 2; i <= n; i++)
+		{
+			data[0] = data[i];		
+			low = 1; 
+			high = i-1; 
+			flag = 1;		// 有序区是 1~i-1
+			while(low <= high && flag != 0)
+			{
+				mid = low + (high - low)/2;
+				if(data[0] < data[mid])
+				{
+					high = mid-1;
+				}
+				else if(data[0] > data[mid])
+				{
+					low = mid+1;
+				}
+				else
+				{
+					flag = 0;			// 找到插入位置mid
+				}	
+			}
+			if(flag == 0)
+			{
+				for(j = i-1; j > mid; j--)			// 将mid之后所有数据移位	
+				{
+					data[j+1] = data[j];	
+				}
+				data[mid+1] = data[0];
+			}
+			if(low > high)
+			{
+				for(j = i-1; j >= mid; j--)	
+				{
+					data[j+1] = data[j];	
+				}
+				data[high+1] = data[0];
+			}
+		}
+		System.out.println();
+	}
+
+	//*************希尔排序**********
+	void ShellSort()
+	{
+		int i, j, d;
+		for(d = n/2; d >= 1; d=d/2)
+		{
+			for(i=d+1; i <= n; i++)
+			{
+				data[0] = data[i];
+				for(j = i-d; j>0 && data[0]>data[j]; j=j-d)
+				{
+					data[j+d] = data[j];			// 记录后移d个位置
+				}
+				data[j+d] = data[0];
+			}
+		}
+		System.out.println();
+	}
+
+	//*************起泡排序************
+	void BublleSort()
+	{
+		int exchange, bound, j;
+		int temp;
+		exchange = n;
+		while(exchange != 0)
+		{
+			bound = exchange; exchange = 0;
+			for(j = 1; j < bound; j++)
+			{
+				if(data[j] > data[j+1])
+				{
+					temp = data[j];
+					data[j] = data[j+1];
+					data[j+1] = temp;
+				}
+				exchange = j;
+			}
+		}
+		System.out.println();
+	}
+
+	// **************快速排序一次划分****************
+	int Partion(int r[], int first, int end)
+	{
+		int temp;
+		int i = first, j = end;
+		while(i < j)
+		{
+			while(i < j && r[i] <= r[j])
+			{
+				j--;					// 从右往左寻找比下标i小的值
+			}
+			if(i < j)
+			{
+				temp = data[j];
+				data[j] = data[i];
+				data[i] = temp;
+				i++;
+			}
+			while(i < j && r[i] <= r[j])
+			{
+				i++;					// 从左往右寻找比下标i小的值
+			}
+			if(i < j)
+			{
+				temp = data[j];
+				data[j] = data[i];
+				data[i] = temp;
+				j--;
+			}
+		}
+		return i;			// 下标i j 重合时, 即为轴值的位置
+	}
+
+	void QuickSort(int r[], int first, int end)
+	{
+		int pivot;			// 存储轴值
+		if(first >= end)
+		{
+			return;
+		}
+		else
+		{
+			pivot = Partion(r, first, end);
+			QuickSort(r, first, pivot-1);
+			QuickSort(r, pivot+1, end);
+		}
+	}
+
+	//************选择排序************
+	void SelectSort()
+	{
+		int temp;
+		int i, j, index;
+		for(i = 1; i <= n; i++)
+		{
+			index = i;
+			for(j=i+1; j <= n+1; j++)
+			{
+				if(data[j] > data[index])
+				{
+					index = j;
+				}
+			}
+			if(index != i)
+			{
+				temp = data[i];
+				data[i] = data[index];
+				data[index] = temp;
+			}
+		}
+		System.out.println();
+	}
+
+	void Sift(int r[], int k, int m)
+	{
+		int temp;
+		int i, j;
+		i = k;
+		j = 2*i;				// i的左孩子
+		while(j <= m)			// 此处必须要用循环
+		{
+			if(j < m && r[j] < r[j+1])			// 说明i的右孩子存在
+			{
+				j++;
+			}
+			if(r[i] > r[j])
+			{
+				break;
+			}
+			else
+			{
+				temp = data[j];
+				data[j] = data[i];
+				data[i] = temp;
+				i = j;					// i标记被筛选的结点
+				j = 2*i;				// 循环加此条件保证结点i的孩子都比它小
+			}
+		}
+	}
+
+
+
+	//**************堆排序***************
+	void HeapSort()
+	{
+		int temp;
+		int i;
+		for(i=n/2; i >= 1; i--)
+		{
+			Sift(data, i, n);		// 建堆-----大根堆
+		}
+		for(i = 1; i < n; i++)
+		{
+			// 将最大值与最小值交换位置
+			temp = data[1];
+			data[1] = data[n-i+1];
+			data[n-i+1] = temp;
+			Sift(data, 1, n-i);
+		}
+		System.out.println();
+	}
+}
+
+
+//Input.java
+import java.util.Scanner;   
+import java.io.*; 
+public class Input
+{
+	public static int ReadInt() 
+	{
+		int value = 0;
+		Scanner s = new Scanner(System.in);
+		value = s.nextInt();
+		return value;
+	}
+	public static double ReadDouble() 
+	{
+		double value = 0;
+		Scanner s = new Scanner(System.in);
+		value = s.nextDouble();
+		return value;
+	}
+	public static float ReadFloat() 
+	{
+		float value = 0;
+		Scanner s = new Scanner(System.in);
+		value = s.nextFloat();
+		return value;
+	}
+	public static int ReadChar()
+	{
+		char value = ' ';
+		try
+		{
+			DataInputStream s = new DataInputStream(System.in);
+			value = s.readChar();
+		}
+		catch (IOException e)
+		{
+		}
+		return value;
+	}
+}
+
+//Create.java
+import java.util.*;
+public class Create
+{
+	int n;
+	int data[];
+	Create(){}
+	Create(int n, int data[])
+	{
+		this.n = n;
+		this.data = data;
+	}
+	void Input()
+	{
+		for(int i = 1; i <= n; i++)					// 0 单元空出, 留作哨兵位
+		{
+			data[i] = new Random().nextInt(101);	// 产生的是0-100的随机数
+		}
+	}
+
+	void Print()
+	{		
+		for(int i = 1; i <= n; i++)
+		{
+			System.out.printf("%-5d", data[i]);
+		}
+	}
+}
