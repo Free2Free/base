@@ -1,0 +1,68 @@
+// Test.java
+public class Test
+{
+	public static void main(String [] args)
+	{
+		int m, n;
+		System.out.println("请输入环的长度:");
+		n = Input.Read();
+		System.out.println("请输入密码:");
+		m = Input.Read();
+		Joseph joseph = new Joseph(m,n);
+		joseph.Creat();
+		joseph.Fun();
+	}
+}
+
+//Input.java
+import java.util.Scanner;           
+public class Input
+{
+	public static int Read() 
+	{
+		int value = 0;
+		Scanner s = new Scanner(System.in);
+		value = s.nextInt();
+		return value;
+	}
+}
+
+//Joseph.java
+public class Joseph
+{
+	int m, n;
+	int s[] = new int[1000];
+	Joseph(){}
+	Joseph(int m, int n)
+	{
+		this.m = m;
+		this.n = n;
+	}
+	void Creat()
+	{
+		int i;
+		for(i = 0; i < n; i++)
+		{
+			s[i] = i+1 ;
+		}	
+	}
+
+	void Fun()
+	{
+		int q = n;
+		int p = 0;			// p为数组中初始下标
+		System.out.println("出环顺序:");
+		while(q != 0)
+		{
+			p = p + m-1;		// m为密码		
+			p = p % q;
+			System.out.printf("%-5d",s[p]);
+		
+			for(int i = p; i < q-1; i++)
+			{
+				s[i] = s[i+1];	// 将数组下标i后所有的数据向前移动一位
+			}
+			q--;
+		}
+	}
+}
