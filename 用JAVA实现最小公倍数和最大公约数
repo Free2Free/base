@@ -1,0 +1,54 @@
+// GCM$LCM.java
+public class GCD$LCM
+{
+	int m,n;
+	GCD$LCM(){}
+	GCD$LCM(int m, int n)
+	{
+		this.m = m;
+		this.n = n;
+	}
+    public int getLCM()
+	{
+        int p,i=1;
+        p=m;
+        while(p%n!=0)
+		{
+            i++;
+            p=m*i;
+        }
+        return p;
+    }
+
+	
+	public int getGCD(int m, int n)   //欧几里得辗转相除法求两数的最大的公约数
+	{
+		// int m;
+		if(m<n)
+		{
+			return getGCD(n,m);
+		}
+		if(m%n!=0)
+		{
+			return getGCD(n,m%n);
+		}
+		else 
+		{
+			return n;
+		}
+	}
+}
+
+
+// Test.java
+public class Test
+{
+    public static void main(String [] args)
+	{
+		int m = 15;
+		int n = 12;
+		GCD$LCM g = new GCD$LCM(m, n);
+		System.out.println(m + "与"+ n +"最小公倍数:" + g.getLCM());
+		System.out.println(m + "与"+ n +"最大公约数:" + g.getGCD(m,n));
+    }
+}
