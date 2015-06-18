@@ -1,0 +1,32 @@
+// TowerOfHanoi.java
+public class TowerOfHanoi
+{
+	public static void Move(int n,String X,String Z,String Y)
+	{		
+		if(n==1)
+		{
+			System.out.println("别逗了");
+			return;
+		}
+		if(n==2)
+		{
+			System.out.println(X + "====>" +  Y);			
+			System.out.println(X + "====>" +  Z);			
+			System.out.println(Y + "====>" +  Z);			
+			return;			
+		}		
+		Move(n-1,X,Y,Z);		
+		System.out.println(X + "====>" +  Z);		
+		Move(n-1,Y,Z,X);		
+	}
+}
+
+// Test.java
+public class Test
+{
+    public static void main(String [] args)
+	{
+		TowerOfHanoi t = new TowerOfHanoi();
+		t.Move(4,"机柜A","机柜C","机柜B");
+    }
+}
