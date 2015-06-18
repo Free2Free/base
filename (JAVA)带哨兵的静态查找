@@ -1,0 +1,104 @@
+// Test.java
+public class Test
+{
+	public static void main(String [] args)
+	{
+		int n = 100, k;
+		int back;
+		Search search = new Search(n);
+		search.Create();
+		search.Print();
+		System.out.print("\n请输入待查找数:");
+		k = Input.ReadInt();
+		back = search.seqSearch(k);
+		if(back == 0)
+		{
+			System.out.println("查无此数");
+		}
+		else
+		{
+			System.out.println("下标为:"+back);
+		}
+	}
+}
+
+// Input.java
+import java.util.Scanner;   
+import java.io.*; 
+public class Input
+{
+	public static int ReadInt() 
+	{
+		int value = 0;
+		Scanner s = new Scanner(System.in);
+		value = s.nextInt();
+		return value;
+	}
+	public static double ReadDouble() 
+	{
+		double value = 0;
+		Scanner s = new Scanner(System.in);
+		value = s.nextDouble();
+		return value;
+	}
+	public static float ReadFloat() 
+	{
+		float value = 0;
+		Scanner s = new Scanner(System.in);
+		value = s.nextFloat();
+		return value;
+	}
+	public static int ReadChar()
+	{
+		char value = ' ';
+		try
+		{
+			DataInputStream s = new DataInputStream(System.in);
+			value = s.readChar();
+		}
+		catch (IOException e)
+		{
+		}
+		return value;
+	}
+}
+
+// Search.java
+import java.util.*;
+public class Search
+{
+	int n;
+	int data[] = new int[1000];
+	Search(){}
+	Search(int n)
+	{
+		this.n = n;
+	}
+	void Create()
+	{
+		for(int i = 1; i <= n; i++)					// 0 单元空出, 留作哨兵位
+		{
+			data[i] = new Random().nextInt(101);	// 产生的是0-100的随机数
+		}
+	}
+
+	void Print()
+	{		
+		for(int i = 1; i <= n; i++)
+		{
+			System.out.printf("%-5d", data[i]);
+		}
+	}
+
+	//**************顺序查找***************
+	int seqSearch(int k)
+	{
+		int i = n;
+		data[0] = k;
+		while(data[i] != k)
+		{
+			i--;
+		}
+		return i;
+	}
+}
