@@ -1,0 +1,48 @@
+#include <stdio.h>
+#include <math.h>
+#define N 1000
+
+void Input(double s[][N], int n)
+{
+	int i, j;
+	printf("请输入矩阵(按行输入):\n");
+	for(i = 0; i < 2; i++)
+	{
+		for(j = 0; j < n; j++)
+		{
+			scanf(" %lf", &s[i][j]);
+		}
+	}	
+}
+
+void Sum(double s[][N], int n, double *a, double *b)
+{
+	double m_1=0, n_1=0, q_1=0, m_2=0, n_2=0, q_2=0;
+	int j;
+	for(j = 0; j < n; j++)
+	{
+		m_1 = m_1 + pow(s[0][j],2);
+		n_1 = n_1 + s[0][j];
+		q_1 = q_1 + s[0][j]*s[1][j];
+		q_2 = q_2 + s[1][j];
+	}
+	m_2 = n_1;
+	n_2 = n;
+	*b = (m_2*q_1 - m_1*q_2)/(m_2*n_1 - m_1*n_2);
+	*a = (n_2*q_1 - n_1*q_2)/(m_1*n_2 - m_2*n_1);
+}
+
+int main()
+{
+	double s[2][N];
+	int n;
+	double a, b;
+	printf("请输入矩阵的列数:");
+	scanf("%d",&n);
+	Input(s,n);				// 输入2行n列矩阵
+	Sum(s,n,&a,&b);
+	printf("斜率a:%.4lf\n",a);
+	printf("截距b:%.4lf\n",b);
+	printf("\n回归方程:f(t) = %.4lft + %.4lf\n", a, b);
+	return 0;
+}
