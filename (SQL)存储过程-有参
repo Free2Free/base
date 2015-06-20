@@ -1,0 +1,16 @@
+/*创建一个从S表查询学生信息的存储过程PROC2，要查询的系号通过执行语句中的输入参数传递给存储过程*/
+use JXGL2
+GO
+IF EXISTS(SELECT NAME FROM sysobjects WHERE name = 'PROC_2')
+DROP PROC PROC_2
+GO
+
+create proc PROC_2
+@a char(10)
+as
+select *
+from s
+where sno=@a
+GO
+
+EXEC PROC_2 '135041419'
