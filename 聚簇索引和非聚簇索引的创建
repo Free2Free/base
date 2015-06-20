@@ -1,0 +1,22 @@
+/*索引的创建*/
+USE JXGL2
+GO
+/*若存在聚簇索引,则删除
+聚簇索引通常随主键一同创建
+IF EXISTS(SELECT NAME FROM sys.indexes WHERE name = 'INDEX_BNO')
+DROP INDEX INDEX_BNO ON BOOK
+GO
+IF EXISTS(SELECT NAME FROM sys.indexes WHERE name = 'PK__BOOK')
+DROP INDEX PK__BOOK ON BOOK
+GO
+
+CREATE UNIQUE CLUSTERED INDEX INDEX_BNO
+ON BOOK(bno  ASC)*/
+
+/**********************************************************/
+/*非聚簇索引*/
+IF EXISTS(SELECT NAME FROM sys.indexes WHERE name = 'INDEX_DNAME')
+DROP INDEX INDEX_DNAME ON DEPT
+GO
+CREATE UNIQUE NONCLUSTERED INDEX INDEX_DNAME
+ON DEPT(dname DESC)
