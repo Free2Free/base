@@ -1,0 +1,14 @@
+USE JXGL2
+GO
+if exists(select name from sysobjects where name = 'SC')
+DROP TABLE SC
+
+
+CREATE TABLE SC
+(
+    sno char(10),/*学号*/
+    cno char(10),/*课程号*/
+    grade tinyint,/*成绩*/
+    time char(10),/*学期*/
+    primary key(sno,cno)
+)
