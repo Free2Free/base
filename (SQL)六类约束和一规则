@@ -1,0 +1,56 @@
+USE JXGL2
+GO
+/*如果存在重名的约束,则删之*/
+if exists(select name from sysobjects where name = 'CHECK_TEL')
+alter table DEPT
+DROP constraint CHECK_TEL
+
+if exists(select name from sysobjects where name = 'CHECK_PRESS')
+alter table BOOK
+DROP constraint CHECK_PRESS
+
+if exists(select name from sysobjects where name = 'CHECK_GRADE')
+alter table SC
+DROP constraint CHECK_GRADE
+
+if exists(select name from sysobjects where name = 'CHECK_SEX')
+alter table S
+DROP constraint CHECK_SEX
+
+/*如果存在主键约束,则删之*/
+if exists(select name from sysobjects where name = 'PK_S')
+ALTER  TABLE  S
+drop  CONSTRAINT  PK_S
+
+/*如果存在唯一约束,则删之*/
+if exists(select name from sysobjects where name = 'UNIQUE_CNAME')
+ALTER  TABLE  C
+drop  CONSTRAINT  UNIQUE_CNAME
+
+
+/******************************************************************************/
+/*电话号码检查约束*/
+alter table DEPT
+add constraint CHECK_TEL check(tel like'58412[0-9][0-9][0-9][0-9][0-9]')
+go
+/*出版社检查约束*/
+alter table BOOK
+add constraint CHECK_PRESS check(bpc like'清华大学出版社')
+go
+
+/*分数检查约束*/
+alter table SC
+add constraint CHECK_GRADE check(grade >= 0 and grade <= 100)
+go
+
+/*性别检查约束*/
+ALTER  TABLE  S
+ADD  CONSTRAINT  CHECK_SEX CHECK(sex='男' or sex='女')
+
+/*主键约束*/
+ALTER  TABLE  S
+ADD  CONSTRAINT  PK_S primary key (sno)
+
+/*唯一约束*/
+ALTER  TABLE  C
+ADD  CONSTRAINT  UNIQUE_CNAME unique(cname)
