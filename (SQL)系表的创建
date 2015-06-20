@@ -11,5 +11,5 @@ CREATE TABLE DEPT
     dno char(10) primary key,	    	/*系编号*/
     dname char(20)  not null,	    	/*系名称*/
     dheader nvarchar(10) not null,		/*系主任*/
-    snum char(10)			        	/*系人数*/
+    snum char(10)			       		/*系人数*/
 )
