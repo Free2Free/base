@@ -1,0 +1,18 @@
+/* 创建数据库文件盒日志文件*/
+CREATE DATABASE JXGL2
+on primary
+(
+	name=jxgl_data,
+	filename='e:\tt\jxgl_data1.mdf',	/*文件夹ee必须存在*/
+	size=5mb,
+	maxsize=500mb,
+	filegrowth=10%
+)
+log on
+(
+	name=jxgl_log1,
+	filename='e:\tt\jxgl_log.ldf',
+	size=10mb,
+	maxsize=200mb,
+	filegrowth=1mb
+)
