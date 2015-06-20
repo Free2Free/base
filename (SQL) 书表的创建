@@ -1,0 +1,13 @@
+USE JXGL2
+GO
+if exists(select name from sysobjects where name = 'BOOK')
+DROP TABLE BOOK
+
+CREATE TABLE BOOK
+(
+    bno char(20) primary key,
+    bname char(20) not null,
+    author nvarchar(20),
+    bpc nvarchar(20),
+    price int
+)
