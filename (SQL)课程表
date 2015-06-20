@@ -1,0 +1,15 @@
+USE JXGL2
+GO
+if exists(select name from sysobjects where name = 'C')
+DROP TABLE C
+
+CREATE TABLE C
+(
+    cno char(10) primary key,		/*课程号*/
+    cname nvarchar(10) not null,	/*课程名*/
+    credit tinyint not null,		/*课程学分*/
+    cpno char(10) not null,			/*先修课程号*/
+    tperiod tinyint,				/*学时*/
+    bno char(20),					/*选用教材编号*/
+    foreign key(bno) references BOOK(bno)  
+)
