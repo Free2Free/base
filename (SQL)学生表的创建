@@ -1,0 +1,18 @@
+USE JXGL2
+GO
+/*如果存在重名的表,则删之*/
+if exists(select name from sysobjects where name = 'S')
+DROP TABLE S
+
+
+CREATE TABLE S
+(
+    sno char(10) primary key,		  /*学号*/
+    sname nvarchar(10) not null,	/*姓名*/
+    sex char(12) not null,		  	/*性别*/
+    birth date not null,		    	/*出生年月日*/
+    homadd nvarchar(40),		    	/*家庭住址*/
+    endate date,				        	/*入学日期*/
+    dno char(10),				        	/*系编号*/
+    foreign key(dno) references DEPT(dno)  
+)
