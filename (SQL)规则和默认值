@@ -1,0 +1,33 @@
+USE JXGL2
+GO
+
+/*规则约束*/
+
+/*创建规则*/
+CREATE  RULE  PRICE_RULE  AS  @a>=0 and @a<=500
+GO
+
+/*绑定规则到列属性上*/
+SP_BINDRULE  PRICE_RULE, 'BOOK.price'
+GO
+/*解除绑定*/
+SP_UNBINDRULE   'BOOK.price'
+/*删除规则*/
+DROP  RULE PRICE_RULE
+GO
+
+/*********************************************************/
+/*默认值约束*/
+
+/*创建默认值*/
+CREATE  DEFAULT  DEFAULT_TIME  AS '第一学期'
+GO
+
+/*绑定默认值到列属性上*/
+SP_BINDEFAULT  DEFAULT_TIME, 'SC.time'
+GO
+/*解除绑定*/
+SP_UNBINDEFAULT   'SC.time' 
+/*删除默认值*/
+DROP  DEFAULT DEFAULT_TIME
+GO
