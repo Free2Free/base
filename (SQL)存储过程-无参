@@ -1,0 +1,17 @@
+/*创建存储过程PROC1，要求返回学号和选修课程的门数及平均分*/
+use JXGL2
+GO
+IF EXISTS(SELECT NAME FROM sysobjects WHERE name = 'PROC_1')
+DROP PROC PROC_1
+GO
+
+
+create proc PROC_1
+as
+select S.SNO,COUNT(*) 选修课程门数,AVG(GRADE) 平均分
+from s,sc
+where s.sno=SC.sno
+group by s.sno
+GO
+/*调用存储过程(无参)*/
+exec PROC_1
