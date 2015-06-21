@@ -1,0 +1,53 @@
+/*显示所有年龄不到20岁的所有男生信息*/
+SELECT * FROM S WHERE DATEDIFF(YY,birth,GETDATE())<=23 and sex='男'
+
+/*查询书名中含有“数据库”的图书信息*/
+SELECT * FROM BOOK WHERE bname LIKE '%数据库%'
+
+/*查询书名中含有“DB_“的图书信息*/
+SELECT * FROM BOOK WHERE bname LIKE '%DB_%'
+
+/*查询姓名以“张”或“李”开头的所有同学的信息*/
+SELECT *FROM S WHERE sname  LIKE '[李,张]%'
+
+/*查询姓名不是以“张”或“王”开头的所有同学的信息*/
+SELECT * FROM s WHERE sname not LIKE '[张,王]%'
+
+/*查询图书定价在20至50元的图书信息*/
+SELECT * FROM BOOK WHERE price>=20 and price<=50
+
+/*查询既不是“清华大学出版社”，也不是“高等教育出版社的”的图书信息*/
+SELECT * FROM BOOK WHERE bpc not in ('清华大学出版社','高等教育出版社')
+
+/*查询BOOK表中的图书号、书名、图书价格及六折后的价格，并将六折后价格设置别名为“折后价”，将查询结果生成一个新表NEWBOOK*/
+/*如果存在重名的表,则删之*/
+if exists(select name from sysobjects where name = 'NEWBOOK')
+DROP TABLE NEWBOOK
+SELECT bno 图书号,bname 图书名,price 原价, price*0.6 折后价 into NEWBOOK FROM BOOK
+
+/*查询清华大学出版社所有的图书信息，并按照定价降序排列*/
+SELECT * FROM BOOK where bpc='清华大学出版社'
+order by price desc
+
+/*查询出版社为“清华大学出版社”和“高等教育出版社”的所有价格大于30的图书信息，并按照定价升序排序*/
+SELECT * FROM BOOK where  price>30 and (bpc='清华大学出版社' or bpc='高等教育出版社')
+order by price
+
+/*查询BOOK表中清华大学出版社的图书信息，要求显示定价排前10的图书信息*/
+SELECT top 10 * FROM BOOK where bpc='清华大学出版社' 
+order by price desc
+
+/*查询已开设的课程的课程号，并去掉重复行*/
+SELECT distinct cno FROM SC
+
+/*查询开设过的课程总门数*/
+SELECT count(distinct cno) 已开设课程门数 FROM SC
+
+/*查询每个同学选修课程的信息，输出学号，总分数，平均分，最高分和最低分*/
+SELECT sno 学号,SUM(grade)总分,MIN(grade) 最低分,MAX(grade) 最高分,avg(grade) 平均分 FROM SC
+group by sno
+
+/*将全部选修成绩大于等于60分的课程，按照课程号分组求出该课程的平均分，显示平均分大于70分的课程的课程号和平均分*/
+SELECT cno 课程号,avg(grade) 平均分 FROM SC where grade>60
+group by cno
+having AVG(grade)>62
