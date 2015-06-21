@@ -1,17 +1,33 @@
-/*为S表建立删除触发器TRIGGER_DELETE，在删除学生记录时自动更新DEPT表中相应系的学生人数*/
-USE JXGL2
+USE   JXGL2
 GO
+/*为S表创建一个插入触发器TRIGGER_INSERT，当向S表中添加数据时，如果添加的学生性别不是“男”或者“女”，则将禁止插入该学生的信息*/
 /*若存在同名的触发器,则删之*/
-IF EXISTS(SELECT NAME FROM sysobjects WHERE name = 'TRIGGER_DELETE')
-DROP TRIGGER TRIGGER_DELETE
+IF EXISTS(SELECT NAME FROM sysobjects WHERE name = 'TRIGGER_INSERT')
+DROP TRIGGER TRIGGER_INSERT
 GO
 
-CREATE TRIGGER TRIGGER_DELETE ON S
-FOR delete AS
-BEGIN
-UPDATE DEPT
-/*重新统计表中的人数*/
-SET snum =(SELECT COUNT(S.sno) FROM S, deleted d WHERE S.dno = d.dno )
-FROM   DEPT,deleted d
-WHERE  DEPT.dno=d.dno
+CREATE  TRIGGER  TRIGGER_INSERT  ON  s
+FOR  INSERT AS 
+IF not EXISTS
+ ( SELECT * FROM INSERTED 
+WHERE sex='男' or sex='女' )
+BEGIN PRINT '性别必须是男或女'
+ROLLBACK 
 END
+GO
+
+/*为DEPT表建立删除触发器D_DELETE，在删除系部信息时，如果被删除的系部有学生，则禁止删除操作*/
+/*若存在同名的触发器,则删之*/
+IF EXISTS(SELECT NAME FROM sysobjects WHERE name = 'D_DELETE')
+DROP TRIGGER D_DELETE
+GO
+CREATE TRIGGER D_DELETE ON dept
+FOR DELETE AS
+IF (EXISTS ( SELECT dno FROM s WHERE dno in (Select dno FROM deleted)))
+BEGIN
+PRINT  '删除记录操作不能完成！'
+PRINT  '该系部有学生'
+ROLLBACK TRANSACTION
+RETURN
+END
+GO
