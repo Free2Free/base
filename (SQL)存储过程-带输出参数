@@ -1,0 +1,29 @@
+/*创建计算1+2+3…一直加到指定值的存储过程PROC7，要求：计算的终值由输入参数决定，计算结果由输出参数返回给调用者*/
+use JXGL2
+GO
+/*若存在同名的存储过程,则删之*/
+IF EXISTS(SELECT NAME FROM sysobjects WHERE name = 'PROC_9')
+DROP PROC PROC_9
+GO
+
+create proc PROC_9
+@n int,
+@sum int output,
+@count int output
+as
+begin
+SELECT @sum=0,  @count=1
+LABEL:
+SELECT @sum=@sum+@count
+SELECT @count=@count+1
+IF @count<=@n
+GOTO  LABEL
+/*累加数循环结束后多一,故此处应减一*/
+SET @count=@count-1
+end
+SELECT @sum 总和,@count 累加次数 
+go
+
+
+declare @s int,@C INT
+exec PROC_9  100,@s OUTPUT,@C OUTPUT
