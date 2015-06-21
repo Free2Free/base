@@ -1,0 +1,17 @@
+/*为S表创建一个插入触发器TRIGGER_INSERT，当向S表中添加数据时，如果添加的学生性别不是“男”或者“女”，则将禁止插入该学生的信息*/
+USE   JXGL2
+GO
+/*若存在同名的触发器,则删之*/
+IF EXISTS(SELECT NAME FROM sysobjects WHERE name = 'TRIGGER_INSERT')
+DROP TRIGGER TRIGGER_INSERT
+GO
+
+CREATE  TRIGGER  TRIGGER_INSERT  ON  s
+FOR  INSERT AS 
+IF not EXISTS
+ ( SELECT * FROM INSERTED 
+WHERE sex='男' or sex='女' )
+BEGIN PRINT '性别必须是男或女'
+ROLLBACK 
+END
+GO
