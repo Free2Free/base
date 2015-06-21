@@ -1,0 +1,17 @@
+/*为S表建立删除触发器TRIGGER_DELETE，在删除学生记录时自动更新DEPT表中相应系的学生人数*/
+USE JXGL2
+GO
+/*若存在同名的触发器,则删之*/
+IF EXISTS(SELECT NAME FROM sysobjects WHERE name = 'TRIGGER_DELETE')
+DROP TRIGGER TRIGGER_DELETE
+GO
+
+CREATE TRIGGER TRIGGER_DELETE ON S
+FOR delete AS
+BEGIN
+UPDATE DEPT
+/*重新统计表中的人数*/
+SET snum =(SELECT COUNT(S.sno) FROM S, deleted d WHERE S.dno = d.dno )
+FROM   DEPT,deleted d
+WHERE  DEPT.dno=d.dno
+END
